@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1rem;
+            background-color: white;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .reservation-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #fff;
+        }
+
+        .reservation-info {
+            margin-bottom: 0.5rem;
+        }
+
+        .actions form {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .actions button {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .actions button.cancel {
+            background-color: #dc3545;
+        }
+
+        .actions button:hover {
+            opacity: 0.9;
+        }
+
+        @media (min-width: 768px) {
+            .reservation-card {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .reservation-info {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Заявки на бронирование</h2>
+
+    <div th:each="reservation : ${reservations}" class="reservation-card">
+        <div class="reservation-info">
+            <p><strong>Пользователь:</strong> <span th:text="${reservation.user.username}">username</span></p>
+            <p><strong>Дата:</strong> <span th:text="${reservation.reservationDate}">дата</span></p>
+            <p><strong>Время:</strong> <span th:text="${reservation.reservationTime}">время</span></p>
+            <p><strong>Гостей:</strong> <span th:text="${reservation.guestsCount}">гостей</span></p>
+            <p><strong>Телефон:</strong> <span th:text="${reservation.contactPhone}">телефон</span></p>
+            <p><strong>Статус:</strong> <span th:text="${reservation.status}">статус</span></p>
+        </div>
+        <div class="actions">
+            <td>
+                <form th:action="@{'/admin/reservations/' + ${reservation.id} + '/status'}" method="post">
+                    <label>
+                        <select name="status">
+                            <option value="COMPLETED">Посещение состоялось</option>
+                            <option value="CANCELLED">Отменено</option>
+                        </select>
+                    </label>
+                    <button type="submit">Обновить</button>
+                </form>
+            </td>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Бронирование столика</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 0.5rem 0 0.3rem 0;
+            font-weight: bold;
+        }
+
+        input, select {
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="datetime-local"] {
+            font-family: Arial, sans-serif;
+        }
+
+        button {
+            margin-top: 1.2rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.8rem;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Забронировать столик</h2>
+    <form th:action="@{/reservations/create}" th:object="${reservation}" method="post">
+        <label for="reservationDate">Дата бронирования</label>
+        <input
+                type="date"
+                id="reservationDate"
+                th:field="*{reservationDate}"
+                required
+                min="{{T(java.time.LocalDate).now()}}"
+        />
+
+        <label for="reservationTime">Время бронирования</label>
+        <input
+                type="time"
+                id="reservationTime"
+                th:field="*{reservationTime}"
+                required
+        />
+
+        <label for="guestCount">Количество гостей</label>
+        <select id="guestCount" th:field="*{guestsCount}" required>
+            <option value="" disabled>Выберите...</option>
+            <option th:each="i : ${#numbers.sequence(1,10)}" th:value="${i}" th:text="${i}"></option>
+        </select>
+
+        <label for="contactPhone">Контактный номер</label>
+        <input
+                type="tel"
+                id="contactPhone"
+                th:field="*{contactPhone}"
+                placeholder="+7(XXX)-XXX-XX-XX"
+                pattern="^\+7\(\d{3}\)-\d{3}-\d{2}-\d{2}$"
+                required
+        />
+
+        <button type="submit">Забронировать</button>
+    </form>
+    <a th:href="@{/reservations}">← Назад к бронированиям</a>
+</div>
+</body>
+</html>

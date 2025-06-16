@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  db:
+    image: 'postgres:latest'
+    container_name: db-kushac
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=kushac_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./local/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
